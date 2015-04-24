@@ -13,7 +13,7 @@ from the Chef Server.
 There were old complaints about local solvers not generating
 the same results as the solver on the server. So, what if we
 just used the same solver, then you'd know you had the same
-resolution. This lead to:
+resolution. This led to:
 
 > I wonder if Batali could be wedged into the client
 
