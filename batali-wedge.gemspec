@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.description = 'Wedge magic into Chef'
   s.require_path = 'lib'
   s.license = 'Apache 2.0'
-  s.add_runtime_dependency 'batali'
+  s.add_runtime_dependency 'batali', '>= 0.2.9', '< 1.0.0'
   s.add_runtime_dependency 'chef', '~> 12.2.0'
   s.files = Dir['{lib}/**/**/*'] + %w(batali-wedge.gemspec README.md CHANGELOG.md LICENSE)
 end
