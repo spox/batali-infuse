@@ -55,7 +55,8 @@ class Chef::PolicyBuilder::ExpandNodeObject
     )
     solver = Grimoire::Solver.new(
       :requirements => requirements,
-      :system => system
+      :system => system,
+      :score_keeper => batali_build_score_keeper
     )
     results = solver.generate!
     solution = results.pop
@@ -80,7 +81,7 @@ class Chef::PolicyBuilder::ExpandNodeObject
         "#{c_name}/#{info['version']}"
       end
     end.flatten.map do |ckbk|
-      Grimoire::Unit.new(
+      Batali::Unit.new(
         Smash.new(
           :name => ckbk.split('/').first,
           :version => ckbk.split('/').last,
@@ -90,6 +91,27 @@ class Chef::PolicyBuilder::ExpandNodeObject
     end
     system.add_unit(*units)
     system
+  end
+
+  # Build score keeper if it is enabled via settings
+  #
+  # @return [Batali::ScoreKeeper]
+  def batali_build_score_keeper
+    if(Chef::Config[:batali_least_impact])
+      Chef::Log.warn "Batali 'least impact resolution' is currently enabled!"
+      if(node[:batali] && node[:batali][:last_resolution])
+        Batali::ScoreKeeper.new(
+          :manifest => Batali::Manifest.new(
+            :cookbooks => node[:batali][:last_resolution].map{ |c_name, c_version|
+              Batali::Unit.new(
+                :name => c_name,
+                :version => c_version
+              )
+            }
+          )
+        )
+      end
+    end
   end
 
 end
