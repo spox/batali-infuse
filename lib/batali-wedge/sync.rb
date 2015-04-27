@@ -97,7 +97,7 @@ class Chef::PolicyBuilder::ExpandNodeObject
   #
   # @return [Batali::ScoreKeeper]
   def batali_build_score_keeper
-    if(Chef::Config[:batali_least_impact])
+    if(batali_least_impact?)
       Chef::Log.warn "Batali 'least impact resolution' is currently enabled!"
       if(node[:batali] && node[:batali][:last_resolution])
         Batali::ScoreKeeper.new(
@@ -112,6 +112,12 @@ class Chef::PolicyBuilder::ExpandNodeObject
         )
       end
     end
+  end
+
+  # @return [TrueClass, FalseClass]
+  def batali_least_impact?
+    Chef::Config[:batali_least_impact] ||
+      (node[:batali] && node[:batali][:least_impact])
   end
 
 end
