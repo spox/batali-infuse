@@ -5,7 +5,7 @@ Add an infusion of [Batali][1] to `chef-client`!
 ## Infusing Batali
 
 This gem infuses Batali into `chef-client` to perform cookbook
-resolution locally on the node, and request the solution set
+resolution locally on the node and request the solution set
 from the Chef Server.
 
 ## Origin of the infusion
@@ -16,7 +16,7 @@ prompted the question:
 
 > Can a client side solver be used to generate a solution?
 
-As it turns out, it can.
+As it turns out, it can!
 
 ## Usage
 
@@ -48,7 +48,7 @@ require 'batali-infuse/sync'
 
 ### Least impact resolution
 
-Batali includes a "least impact" feature when resolving cookbooks.
+Batali includes a ["least impact"][2] feature when resolving cookbooks.
 This feature can be enabled when resolving cookbooks on the local
 node. The benefit of least impact updates is that nodes will not
 automatically request the latest version of a cookbook available if
@@ -78,6 +78,7 @@ _NOTE: Enabling via the configuration file will override a disabled setting with
 ## Resolver
 
 * Batali: https://github.com/hw-labs/batali
+* Least impact updates: https://github.com/hw-labs/batali#least-impact-updates
 
 ## General
 
@@ -85,3 +86,4 @@ _NOTE: Enabling via the configuration file will override a disabled setting with
 * IRC: Freenode @ #heavywater
 
 [1]: https://github.com/hw-labs/batali "Light weight cookbook resolver"
+[2]: https://github.com/hw-labs/batali#least-impact-updates "Batali: Least impact updates"
