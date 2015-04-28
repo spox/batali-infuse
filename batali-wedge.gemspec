@@ -2,15 +2,13 @@ $LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__)) + '/lib/'
 require 'batali-wedge/version'
 Gem::Specification.new do |s|
   s.name = 'batali-wedge'
-  s.version = BataliWedge::VERSION.version
+  s.version = '0.1.2'
   s.summary = 'Magic wedger'
   s.author = 'Chris Roberts'
   s.email = 'code@chrisroberts.org'
-  s.homepage = 'https://github.com/hw-labs/batali-wedge'
+  s.homepage = 'https://github.com/hw-labs/batali-infuse'
   s.description = 'Wedge magic into Chef'
-  s.require_path = 'lib'
   s.license = 'Apache 2.0'
-  s.add_runtime_dependency 'batali', '>= 0.2.9', '< 1.0.0'
-  s.add_runtime_dependency 'chef', '~> 12.2.0'
-  s.files = Dir['{lib}/**/**/*'] + %w(batali-wedge.gemspec README.md CHANGELOG.md LICENSE)
+  s.add_runtime_dependency 'batali-infuse', '> 0'
+  s.files = %w(batali-wedge.gemspec)
 end
