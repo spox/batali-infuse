@@ -1,48 +1,77 @@
-# Batali Wedge
+# Batali Infuse
 
-Lets have some fun with `chef-client`!
+Add an infusion of Batali to `chef-client`!
 
-## Wedge Batali
+## Infusing Batali
 
-This gem wedges Batali into `chef-client` to perform cookbook
+This gem infuses Batali into `chef-client` to perform cookbook
 resolution locally on the node, and request the solution set
 from the Chef Server.
 
-## OMG WHY!?
+## Origin of the infusion
 
-There were old complaints about local solvers not generating
-the same results as the solver on the server. So, what if we
-just used the same solver, then you'd know you had the same
-resolution. This led to:
+There are some claims that the solver the Chef Server uses can
+provide incorrect solutions. Though these are only claims, it
+prompted the question:
 
-> I wonder if Batali could be wedged into the client
+> Can a client side solver be used to generate a solution?
 
 As it turns out, it can.
 
 ## Usage
 
-This only support 12.2.x versions of Chef. The gem needs to be
-installed into the omnibus like so:
+### Install
+
+This only supports 12.2.x versions of Chef. If Chef is running via
+the omnibus install the gem should be installed like so:
 
 ```
 $ /opt/chef/emebedded/bin/gem install batali-wedge --no-document
 ```
 
-Then you can enable it via the `client.rb` file by adding this to
-the top:
+If Chef is running via the system Ruby, just install the gem directly:
+
+```
+$ gem install batali-wedge --no-document
+```
+
+### Enable
+
+The infusion is enabled via the `client.rb` file. Add the following
+line to the top of the file:
 
 ```ruby
 # /etc/chef/client.rb
 
-require 'batali-wedge/sync'
+require 'batali-infuse/sync'
 ```
 
-## What does this provide?
+### Least impact resolution
 
-Cookbook resolution, just on the client, via Batali. There's no
-least impact yet, but mostly because this was a first pass to
-see _if_ it would work. The next release will likely include
-that feature just to see what happens.
+Batali includes a "least impact" feature when resolving cookbooks.
+This feature can be enabled when resolving cookbooks on the local
+node. The benefit of least impact updates is that nodes will not
+automatically request the latest version of a cookbook available if
+it has already been provisioned. Instead, it will use a "least impact"
+approach when resolving cookbooks, and no update will occur if the
+previous version is still available within the given constraints.
+
+There are two ways the option can be enabled:
+
+#### Node attribute
+
+```ruby
+node.set[:batali][:least_impact] = true
+```
+
+#### Chef configuration
+
+```ruby
+# /etc/chef/client.rb
+...
+batali_least_impact true
+```
+_NOTE: Enabling via the configuration file will override a disabled setting within the node attributes_
 
 # Info
 
