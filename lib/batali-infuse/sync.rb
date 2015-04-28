@@ -1,4 +1,4 @@
-require 'batali-wedge'
+require 'batali-infuse'
 
 class Chef::PolicyBuilder::ExpandNodeObject
 
@@ -62,7 +62,7 @@ class Chef::PolicyBuilder::ExpandNodeObject
     solution = results.pop
     solution_output = solution.units.sort_by(&:name).map{|u| "#{u.name}<#{u.version}>"}.join(', ')
     node.set[:batali] ||= Mash.new
-    node.set[:batali][:last_resolution] = Mash[solution.map{|u| [u.name, u.version]}]
+    node.set[:batali][:last_resolution] = Mash[solution.units.map{|u| [u.name, u.version]}]
     Chef::Log.warn "Batali cookbook resolution: #{solution_output}"
     Hash[
       solution.units.map do |unit|

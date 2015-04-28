@@ -1,2 +1,2 @@
 require 'batali'
-require 'batali-wedge/version'
+require 'batali-infuse/version'
