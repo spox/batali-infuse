@@ -1,6 +1,6 @@
 # Batali Infuse
 
-Add an infusion of Batali to `chef-client`!
+Add an infusion of [Batali][1] to `chef-client`!
 
 ## Infusing Batali
 
@@ -75,5 +75,13 @@ _NOTE: Enabling via the configuration file will override a disabled setting with
 
 # Info
 
-* Repository: https://github.com/hw-labs/batali-wedge
+## Resolver
+
+* Batali: https://github.com/hw-labs/batali
+
+## General
+
+* Repository: https://github.com/hw-labs/batali-infuse
 * IRC: Freenode @ #heavywater
+
+[1]: https://github.com/hw-labs/batali "Light weight cookbook resolver"
