@@ -1,5 +1,4 @@
 $LOAD_PATH.unshift File.expand_path(File.dirname(__FILE__)) + '/lib/'
-require 'batali-wedge/version'
 Gem::Specification.new do |s|
   s.name = 'batali-wedge'
   s.version = '0.1.2'
