@@ -40,21 +40,17 @@ class Chef::PolicyBuilder::ExpandNodeObject
     constraints = Smash[
       api_service.get_rest("environments/#{node.chef_environment}").cookbook_versions.to_a
     ]
-    @expanded_run_list_with_versions.each do |item|
-      c_name, c_version = item.split('@')
-      c_name = c_name.split('::').first
-      if(c_version)
-        constraints[c_name] = c_version
-      elsif(constraints[c_name].nil?)
-        constraints[c_name] = '> 0'
+    restrictions = api_service.get_rest("environments/#{node.chef_environment}").cookbook_versions.to_a
+    requirements = Array.new.tap do |reqs|
+      @expanded_run_list_with_versions.each do |item|
+        c_name, c_version = item.split('@')
+        c_name = c_name.split('::').first
+        reqs << [c_name, c_version ? c_version : '> 0']
       end
     end
-    requirements = Grimoire::RequirementList.new(
-      :name => :batali_resolv,
-      :requirements => constraints.to_a
-    )
     solver = Grimoire::Solver.new(
       :requirements => requirements,
+      :restrictions => restrictions,
       :system => system,
       :score_keeper => batali_build_score_keeper
     )
