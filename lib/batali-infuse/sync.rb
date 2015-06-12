@@ -84,7 +84,7 @@ class Chef::PolicyBuilder::ExpandNodeObject
   # @return [Grimoire::System]
   def batali_build_system
     system = Grimoire::System.new
-    units = api_service.get_rest('cookbooks').map do |c_name, meta|
+    units = api_service.get_rest('cookbooks?num_versions=all').map do |c_name, meta|
       meta['versions'].map do |info|
         "#{c_name}/#{info['version']}"
       end
