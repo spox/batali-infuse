@@ -40,35 +40,43 @@ class Chef::PolicyBuilder::ExpandNodeObject
     constraints = Smash[
       api_service.get_rest("environments/#{node.chef_environment}").cookbook_versions.to_a
     ]
-    @expanded_run_list_with_versions.each do |item|
-      c_name, c_version = item.split('@')
-      c_name = c_name.split('::').first
-      if(c_version)
-        constraints[c_name] = c_version
-      elsif(constraints[c_name].nil?)
-        constraints[c_name] = '> 0'
+    restrictions = api_service.get_rest("environments/#{node.chef_environment}").cookbook_versions.to_a
+    requirements = Array.new.tap do |reqs|
+      @expanded_run_list_with_versions.each do |item|
+        c_name, c_version = item.split('@')
+        c_name = c_name.split('::').first
+        reqs << [c_name, c_version ? c_version : '> 0']
       end
     end
-    requirements = Grimoire::RequirementList.new(
-      :name => :batali_resolv,
-      :requirements => constraints.to_a
-    )
-    solver = Grimoire::Solver.new(
-      :requirements => requirements,
-      :system => system,
-      :score_keeper => batali_build_score_keeper
-    )
-    results = solver.generate!
-    solution = results.pop
-    solution_output = solution.units.sort_by(&:name).map{|u| "#{u.name}<#{u.version}>"}.join(', ')
-    node.set[:batali] ||= Mash.new
-    node.set[:batali][:last_resolution] = Mash[solution.units.map{|u| [u.name, u.version]}]
-    Chef::Log.warn "Batali cookbook resolution: #{solution_output}"
-    Hash[
-      solution.units.map do |unit|
-        [unit.name, api_service.get_rest("cookbooks/#{unit.name}/#{unit.version}")]
-      end
-    ]
+    unless(requirements.empty?)
+      solver = Grimoire::Solver.new(
+        :requirements => Grimoire::RequirementList.new(
+          :name => 'requirements',
+          :requirements => requirements
+        ),
+        :restrictions => Grimoire::RequirementList.new(
+          :name => 'restrictions',
+          :requirements => restrictions
+        ),
+        :system => system,
+        :score_keeper => batali_build_score_keeper
+      )
+      results = solver.generate!
+      solution = results.pop
+      solution_output = solution.units.sort_by(&:name).map{|u| "#{u.name}<#{u.version}>"}.join(', ')
+      node.set[:batali] ||= Mash.new
+      node.set[:batali][:last_resolution] = Mash[solution.units.map{|u| [u.name, u.version]}]
+      Chef::Log.warn "Batali cookbook resolution: #{solution_output}"
+      Hash[
+        solution.units.map do |unit|
+          [unit.name, api_service.get_rest("cookbooks/#{unit.name}/#{unit.version}")]
+        end
+      ]
+    else
+      node.set[:batali][:last_resolution] = Mash.new
+      Chef::Log.warn 'Batali resolution not required. No cookbooks in run list!'
+      Hash.new
+    end
   end
 
   # Build the base system for generating solution
@@ -76,7 +84,7 @@ class Chef::PolicyBuilder::ExpandNodeObject
   # @return [Grimoire::System]
   def batali_build_system
     system = Grimoire::System.new
-    units = api_service.get_rest('cookbooks').map do |c_name, meta|
+    units = api_service.get_rest('cookbooks?num_versions=all').map do |c_name, meta|
       meta['versions'].map do |info|
         "#{c_name}/#{info['version']}"
       end
