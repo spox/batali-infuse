@@ -11,6 +11,6 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.license = 'Apache 2.0'
   s.add_runtime_dependency 'batali', '>= 0.2.11', '< 1.0.0'
-  s.add_runtime_dependency 'chef', '~> 12.2.0'
+  s.add_runtime_dependency 'chef', '~> 12.2'
   s.files = Dir['{lib}/**/**/*'] + %w(batali-infuse.gemspec README.md CHANGELOG.md LICENSE)
 end
