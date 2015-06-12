@@ -22,17 +22,17 @@ As it turns out, it can!
 
 ### Install
 
-This only supports 12.2.x versions of Chef. If Chef is running via
+This is tested for Chef versions '~> 12.2'. If Chef is running via
 the omnibus install the gem should be installed like so:
 
 ```
-$ /opt/chef/emebedded/bin/gem install batali-wedge --no-document
+$ /opt/chef/emebedded/bin/gem install batali-infuse --no-document
 ```
 
 If Chef is running via the system Ruby, just install the gem directly:
 
 ```
-$ gem install batali-wedge --no-document
+$ gem install batali-infuse --no-document
 ```
 
 ### Enable
